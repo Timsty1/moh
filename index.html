@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3Y11HDNJTQ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-3Y11HDNJTQ');
+  </script>
+  <meta charset="UTF-8">
+  <title>Mixture of Horizons in Action Chunking</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    /* --- Global Typography & Layout --- */
+    body {
+      font-family: 'Inter', sans-serif;
+      color: #333;
+      background-color: #ffffff;
+      font-size: 16px; /* Increased base font size */
+      line-height: 1.6; /* Better readability */
+      padding-top: 50px;
+      padding-bottom: 80px;
+    }
+
+    /* Restrict max width for better reading experience on large screens */
+    .container {
+      max-width: 1000px;
+    }
+
+    h1 {
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 25px;
+      color: #111;
+    }
+
+    h2 {
+      margin-top: 50px;
+      margin-bottom: 25px;
+      font-weight: 600;
+      font-size: 28px;
+      color: #222;
+      border-bottom: 1px solid #eaeaea;
+      padding-bottom: 15px;
+    }
+
+    h3 {
+      font-weight: 600;
+      font-size: 22px;
+      margin-top: 30px;
+      margin-bottom: 20px;
+    }
+
+    a {
+      color: #2d57a5;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    a:hover {
+      color: #1a3a75;
+      text-decoration: none;
+    }
+
+    /* --- Author Section --- */
+    .text-title {
+      font-size: 36px;
+      margin-top: 10px;
+      margin-bottom: 30px;
+    }
+
+    .authors {
+      font-size: 18px;
+    }
+
+    .authors li {
+      padding: 0 8px;
+    }
+
+    .authors sup {
+      color: #777;
+      font-size: 0.7em;
+    }
+
+    .author-block {
+      display: inline-block;
+      margin: 0 10px;
+      color: #555;
+      font-size: 16px;
+    }
+
+    /* --- Button Links --- */
+    .btn-link-custom {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin: 5px 8px;
+      padding: 10px 24px;
+      background-color: #333;
+      color: white !important;
+      text-decoration: none;
+      border-radius: 999px; /* Pill shape */
+      font-size: 16px;
+      font-weight: 500;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+
+    .btn-link-custom:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+
+    .btn-link-custom:first-child {
+      background-color: #B31B1B; /* arXiv red */
+    }
+
+    .btn-link-custom:last-child {
+      background-color: #fff;
+      color: #333 !important;
+      border: 1px solid #ddd;
+    }
+
+    /* --- Text Highlights --- */
+    .text-blue-bold { color: #2d57a5; font-weight: 700; }
+    .text-red-bold { color: #c0392b; font-weight: 700; }
+    .text-bold { font-weight: 700; }
+    .text-justify { text-align: justify; }
+
+    /* --- Video Containers (Square & Clean) --- */
+    .video-container {
+      position: relative;
+      width: 100%;
+      background: #000;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      /* Enforce 1:1 Aspect Ratio using modern CSS */
+      aspect-ratio: 1 / 1;
+    }
+
+    .video-container video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* Ensures video fills the square without stretching */
+      display: block;
+      /* Disable pointer events to prevent controls from showing on touch/click */
+      pointer-events: none;
+    }
+
+    .video-label {
+      text-align: center;
+      font-weight: 600;
+      margin-top: 8px;
+      color: #444;
+      font-size: 11px;
+      line-height: 1.2;
+    }
+
+    /* --- 7 Videos Row Layout --- */
+    .flex-row-7 {
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: space-between;
+      gap: 12px; /* Consistent gap */
+      overflow-x: auto;
+      padding-bottom: 10px; /* Space for potential scrollbar */
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Hide scrollbar for cleaner look, but allow scrolling */
+    .flex-row-7::-webkit-scrollbar {
+      height: 4px; /* Very thin scrollbar */
+    }
+    .flex-row-7::-webkit-scrollbar-thumb {
+      background: #ddd;
+      border-radius: 4px;
+    }
+    .flex-row-7::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .flex-row-7 .video-wrapper {
+      /* Dynamic calculation: (100% - total gap) / 7 */
+      flex: 0 0 calc((100% - 72px) / 7);
+      min-width: 100px; /* Prevent becoming too small on mobile */
+    }
+
+    /* --- Images & Captions --- */
+    .figure-box {
+      margin-bottom: 20px;
+    }
+
+    .figure-box img {
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      margin: 0 auto;
+    }
+
+    .caption-text {
+      font-size: 0.9em;
+      color: #666;
+      font-style: normal; /* Removed italic for cleaner look */
+      margin-top: 12px;
+      line-height: 1.5;
+      text-align: justify;
+      background: #f9f9f9;
+      padding: 10px 15px;
+      border-radius: 6px;
+      border-left: 3px solid #ddd;
+    }
+
+    /* --- Comparison Box --- */
+    .comp-box {
+      background: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 12px;
+      padding: 30px;
+      margin-top: 40px;
+    }
+
+    /* --- New TLDR Box Style --- */
+    .tldr-box {
+      background-color: #f0f7ff; /* Very light blue background */
+      border: 1px solid #dbeafe;  /* Light blue border */
+      border-radius: 12px;
+      padding: 30px;
+      margin-top: 40px;
+    }
+    .tldr-box h2 {
+      margin-top: 0;
+      border-bottom-color: #dbeafe;
+      color: #1e40af; /* Darker blue heading */
+    }
+
+    /* --- Citation Block --- */
+    .box-gray {
+      background-color: #f4f5f7;
+      padding: 20px 30px 30px;
+      border-radius: 12px;
+      margin-top: 60px;
+    }
+
+    .codebox {
+      position: relative;
+      border: 1px solid #e1e4e8;
+      border-radius: 6px;
+      background-color: #ffffff;
+    }
+
+    .codebox-pre {
+      background: transparent;
+      border: none;
+      padding: 15px;
+      margin: 0;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #24292e;
+      overflow-x: auto;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #555;
+      background-color: #f0f0f0;
+      border: 1px solid #d1d5da;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover {
+      background-color: #e6e6e6;
+      border-color: #bbb;
+    }
+
+    /* Utilities */
+    .top20 { margin-top: 20px; }
+    .top40 { margin-top: 40px; }
+    .bottom10 { margin-bottom: 10px; }
+    .center-table { display: block; margin-left: auto; margin-right: auto; }
+  </style>
+</head>
+
+
+<body>
+<div class="container">
+
+  <div class="row text-center">
+    <h1 class="text-title">Mixture of Horizons in Action Chunking</h1>
+  </div>
+
+  <div class="row text-center col-md-10 col-md-offset-1">
+    <ul class="list-inline authors">
+      <li><a href="https://scholar.google.com/citations?user=eDA8Ol8AAAAJ&hl=en">Dong Jing</a><sup>1,2</sup></li>
+      <li><a>Gang Wang</a><sup>3</sup></li>
+      <li><a href="https://jiaaqiliu.github.io/">Jiaqi Liu</a><sup>2</sup></li>
+      <li><a href="https://cuhkwilliam.github.io/">Weiliang Tang</a><sup>3</sup></li>
+      <li><a href="https://scholar.google.com/citations?hl=en&user=mDxuGMgAAAAJ">Zelong Sun</a><sup>1</sup></li><br>
+      <li><a href="https://scholar.google.com/citations?hl=en&user=KSKW_J4AAAAJ">Yunchao Yao</a><sup>2</sup></li>
+      <li><a href="https://zhenyuwei2003.github.io/">Zhenyu Wei</a><sup>2</sup></li>
+      <li><a href="https://scholar.google.com/citations?hl=en&user=WzmDQTMAAAAJ">Yunhui Liu</a><sup>3</sup></li>
+      <li><a href="https://gsai.ruc.edu.cn/english/luzhiwu">Zhiwu Lu</a><sup>1†</sup></li>
+      <li><a href="https://dingmyu.github.io/">Mingyu Ding</a><sup>2†</sup></li>
+    </ul>
+  </div>
+
+  <div class="row text-center col-md-10 col-md-offset-1 top20">
+    <span class="author-block"><sup>1</sup> Renmin University of China</span><br>
+    <span class="author-block"><sup>2</sup> University of North Carolina at Chapel Hill</span><br>
+    <span class="author-block"><sup>3</sup> The Chinese University of Hong Kong</span>
+  </div>
+
+  <div class="row text-center col-md-10 col-md-offset-1 top20">
+    <span style="font-size: 14px; color: #777;">† Corresponding author</span>
+  </div>
+
+  <div class="row" style="margin-top: 35px; text-align: center;">
+    <div class="col-md-12">
+      <a href="https://arxiv.org/abs/2511.19433" target="_blank" class="btn-link-custom">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" width="16" height="16" style="margin-right:8px;"><path fill="currentColor" d="M181.9 256.1c-5-16-4.9-46.9-2-46.9 8.4 0 7.6 36.9 2 46.9zm-1.7 47.2c-7.7 20.2-17.3 43.3-28.4 62.7 18.3-7 39-17.2 62.9-21.9-12.7-9.6-24.9-23.4-34.5-40.8zM86.1 428.1c0 .8 13.2-5.4 34.9-40.2-6.7 6.3-29.1 24.5-34.9 40.2zM248 160h136v328c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V24C0 10.7 10.7 0 24 0h200v136c0 13.2 10.8 24 24 24zm-8 171.8c-20-12.2-33.3-29-42.7-53.8 4.5-18.5 11.6-46.6 6.2-64.2-4.7-29.4-42.4-26.5-47.8-6.8-5 18.3-.4 44.1 8.1 77-11.6 27.6-28.7 64.6-40.8 85.8-.1 0-.1.1-.2.1-27.1 13.9-73.6 44.5-54.5 68 5.6 6.9 16 10 21.5 10 17.9 0 35.7-18 61.1-61.8 25.8-8.5 54.1-19.1 79-23.2 21.7 11.8 47.1 19.5 64 19.5 29.2 0 31.2-32 19.7-43.4-13.9-13.6-54.3-9.7-73.6-7.2zM377 105L279 7c-4.5-4.5-10.6-7-17-7h-6v128h128v-6.1c0-6.3-2.5-12.4-7-16.9zm-74.1 255.3c4.1-2.7-2.5-11.9-42.8-9 37.1 15.8 42.8 9 42.8 9z"/></svg>
+        Paper
+      </a>
+      <a href="https://github.com/Timsty1/MixtureOfHorizons" target="_blank" class="btn-link-custom">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="18" height="18" style="margin-right:8px;"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.65 7.65 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8 c0-4.42-3.58-8-8-8z"/></svg>
+        Code
+      </a>
+      <a href="https://huggingface.co/Timsty/mixture_of_horizons" target="_blank" class="btn-link-custom">
+        <img src="https://huggingface.co/spaces/huggingface/open-source-ai-year-in-review-2024/resolve/main/logos/huggingface_logo-noborder.svg" width="20" height="20" style="margin-right:5px;">
+        Models
+      </a>
+      <div class="top20">
+        <span class="text-bold" style="font-size: 18px; color: #27ae60;">
+          Code and Models will be released in this week.
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row top40 tldr-box">
+    <div class="col-md-12">
+      <h2>TL;DR</h2>
+      <ul style="font-size: 18px; padding-left: 20px;">
+        <li style="margin-bottom: 10px;">VLA models' performance is sensitive to the <span class="text-blue-bold">action chunk length (horizon)</span>.
+          The single horizon induces an inherent <span class="text-blue-bold">trade-off</span> between <strong>long-term foresight and short-term precision</strong>.</li>
+        <li style="margin-bottom: 10px;">We propose <span class="text-blue-bold">Mixture of Horizons (MoH)</span>, a plug-and-play strategy that <strong>fuses multiple horizons</strong> within a single policy to inherit the strengths of both with <strong>minimal training or inference overhead</strong>.</li>
+        <li>MoH enables <span class="text-blue-bold">Dynamic Inference</span>, selecting stable actions through <strong>cross-horizon consensus</strong> for higher efficiency and robustness.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="row top40">
+    <div class="col-md-6">
+      <figure class="figure-box">
+        <img src="sources/images/study_of_horizons_pi0.png" alt="Horizon Trade-off" class="img-responsive">
+        <figcaption class="caption-text">
+          <strong>Trade-off Effect of action horizon on \(\pi_0\).</strong>
+          Longer horizons facilitate structural foresight (beneficial for Goal/Long tasks), whereas shorter horizons ensure precise control (crucial for Spatial/Object tasks).
+          Our MoH strategy alleviates this trade-off and raises overall performance.
+        </figcaption>
+      </figure>
+    </div>
+    <div class="col-md-6">
+      <figure class="figure-box">
+        <img src="sources/images/intro_motivation_v2.png" alt="MoH Concept" class="img-responsive">
+        <figcaption class="caption-text">
+          <strong>Mixture of Horizons.</strong>
+Action queries in multiple horizons are processed in parallel via a shared action transformer and integrated by a lightweight mixture layer.
+          MoH simultaneously enables long-term foresight and short-term precision for VLAs.
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="row top40 text-justify">
+    <h2>Abstract</h2>
+    <p>
+      Vision-language-action (VLA) models have shown remarkable capabilities in robotic manipulation, but their performance is sensitive to the
+      <span class="text-blue-bold">action chunk length</span> used during training, termed <span class="text-blue-bold">"horizon"</span>.
+      Our empirical study reveals an inherent <span class="text-blue-bold">trade-off</span>: longer horizons provide stronger global foresight but degrade fine-grained accuracy, while shorter ones sharpen local control yet struggle on long-term tasks, implying fixed choice of single horizons being suboptimal.
+      To mitigate the trade-off, we propose a <span class="text-blue-bold">mixture of horizons (MoH)</span> strategy.
+      MoH rearranges the action chunk into several segments with different horizons, processes them in parallel with a shared action transformer,
+      and fuses outputs with a lightweight linear gate.<br>
+      It has three appealing benefits.<br>
+      1) MoH exploits long-term foresight and short-term precision jointly within a single model, improving both performance and generalizability to complex tasks.<br>
+      2) MoH is <span class="text-blue-bold">plug-and-play</span> for full-attention action modules with <span class="text-blue-bold">minimal training or inference overhead</span>.<br>
+      3) MoH enables <span class="text-blue-bold">dynamic inference</span> with adaptive horizons, which selects stable actions through <span class="text-blue-bold">cross-horizon consensus</span>, achieving 2.5x higher throughput than baselines while preserving superior performance.<br>
+      Extensive experiments over flow-based policies π<sub>0</sub>, π<sub>0.5</sub>, and one-step regression policy π<sub>reg</sub> demonstrate that MoH yields consistent and significant gains on both simulations and real-world tasks.
+      Notably, under mixed-task setting, π<sub>0.5</sub> with MoH reaches a new state-of-the-art with <span class="text-red-bold">99%</span> average success rate on LIBERO after only 30k training iterations.
+    </p>
+  </div>
+
+  <div class="row top40">
+    <h2>Framework - Mixture of Horizons</h2>
+    <div class="col-md-12 text-justify">
+      <p>
+        Following the Occam’s razor principle, we adopt the simplest way to implement the mixture of horizons strategy.<br>
+        To begin with, the action-related input is <strong>rearranged into different horizons</strong> and processed <strong>in parallel</strong> by a shared action transformer.
+        Then, we introduce a <strong>linear gate head</strong> similar to the action projection head, with only \(2k\) parameters, to produce per-step, per-horizon weights to fuse horizon-wise predictions.
+        To prevent the gating head collapse to some preferred horizons, we also introduce a <strong>balance loss</strong> to encourage all horizons are effectively utilized.<br>
+        Notably, our mixture of horizons strategy is compatible with both <strong>Flow-Matching</strong> policies and <strong>One-Step</strong> policies with minimal training or inference overhead.
+      </p>
+    </div>
+    <div class="col-md-10 col-md-offset-1 top20">
+      <figure class="figure-box">
+        <img src="sources/images/architecture_v2.png" alt="Architecture" class="img-responsive" style="width: 70%; display: block; margin: 0 auto;">
+        <figcaption class="caption-text">
+          Overview of the Mixture of Horizons framework.
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="row top40">
+    <h2>Simulation Experiments</h2>
+    <p class="text-justify">
+      <strong> Results on LIBERO. </strong>
+      Mixture of Horizons yields consistent and significant gains across all baselines (\(\pi_0\), \(\pi_{0.5}\), \(\pi_{reg}\)).<br>
+      \(\pi_{0.5}\) with MoH achieves SOTA 99% success rate on LIBERO with only 30k training iterations and batch size of 32.<br>
+      Interestingly, \(\pi_{reg}\), obtained by fine-tuning from the \(\pi_{0}\) base model, can even outperform the standard fine-tuned flow-matching-based \(\pi_{0}\), and achieves the best performance across regression or classification-based VLA models.
+      Given that LIBERO’s training and evaluation settings are highly in-distribution, this result indicates that the policy with regression objective converges well on small-scale downstream tasks.
+    </p>
+
+    <div class="col-md-12 top20">
+      <figure class="figure-box">
+        <img src="sources/tables/libero_main.jpg" alt="LIBERO Results" class="center-table img-responsive" style="max-width: 80%;">
+        <figcaption class="caption-text text-center">
+          Comparison of VLA models on LIBERO.
+          Iters is the abbreviation of training iterations.
+          Best results are in <strong>bold</strong>.
+          MoH consistently improves flow-matching and regression-based baselines.
+          † UniVLA and X-VLA use large training batch size of 192 and 128, separately.
+        </figcaption>
+      </figure>
+    </div>
+
+    <p class="text-justify top40">
+      <strong> Results on RoboTwin2.0. </strong>
+      We also evluate MoH on 7 representative tasks from RoboTwin2.0.
+      Results show that MoH not only boosts in-distribution convergence, but also enhances robustness and generalization to more challenging task configurations.
+    </p>
+
+    <div class="col-md-10 col-md-offset-1 top20">
+      <figure class="figure-box">
+        <img src="sources/images/robotwin.png" alt="RoboTwin Comparison" class="img-responsive">
+        <figcaption class="caption-text">
+          Performance on RoboTwin 2.0 (Easy & Hard settings). \(\pi_0\) with MoH consistently outperforms the base \(\pi_0\) model.
+        </figcaption>
+      </figure>
+    </div>
+
+    <div class="col-md-12 top40">
+      <h3 class="text-center">Qualitative Results on LIBERO</h3>
+      <div class="flex-row-7">
+        <div class="video-wrapper">
+          <div class="video-container">
+            <video autoplay loop muted playsinline>
+              <source src="sources/videos/rollout_pick_up_the_black_bowl_on_the_wooden_cabinet_and_place_it_on_the_plate_success.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="video-label">SPATIAL: pick up the black bowl on the wooden cabinet and place it on the plate</div>
+        </div>
+        <div class="video-wrapper">
+          <div class="video-container">
+            <video autoplay loop muted playsinline>
+              <source src="sources/videos/rollout_pick_up_the_chocolate_pudding_and_place_it_in_the_basket_success.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="video-label">OBJECT: pick up the chocolate pudding and place it in the basket</div>
+        </div>
+        <div class="video-wrapper">
+          <div class="video-container">
+            <video autoplay loop muted playsinline>
+              <source src="sources/videos/rollout_open_the_top_drawer_and_put_the_bowl_inside_success.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="video-label">GOAL: open the top drawer and put the bowl inside</div>
+        </div>
+        <div class="video-wrapper">
+          <div class="video-container">
+            <video autoplay loop muted playsinline>
+              <source src="sources/videos/rollout_put_both_moka_pots_on_the_stove_success.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="video-label">LONG: put both moka pots on the stove</div>
+        </div>
+        <div class="video-wrapper">
+          <div class="video-container">
+            <video autoplay loop muted playsinline>
+              <source src="sources/videos/rollout_put_both_the_alphabet_soup_and_the_cream_cheese_box_in_the_basket_success.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="video-label">LONG: put both alphabet soup and cream cheese box in the basket</div>
+        </div>
+        <div class="video-wrapper">
+          <div class="video-container">
+            <video autoplay loop muted playsinline>
+              <source src="sources/videos/rollout_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket_success.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="video-label">LONG: put both alphabet soup and tomato sauce in basket</div>
+        </div>
+        <div class="video-wrapper">
+          <div class="video-container">
+            <video autoplay loop muted playsinline>
+              <source src="sources/videos/rollout_put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate_success.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="video-label">LONG: put white mug on the plate and put chocolate pudding to the right of the plate</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-12 top40">
+      <h3 class="text-center">Qualitative Results on RoboTwin2.0</h3>
+      <div class="flex-row-7">
+        <div class="video-wrapper">
+          <div class="video-container">
+            <video autoplay loop muted playsinline>
+              <source src="sources/videos/place_shoe.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="video-label">Task 1: place shoe</div>
+        </div>
+        <div class="video-wrapper">
+          <div class="video-container">
+            <video autoplay loop muted playsinline>
+              <source src="sources/videos/move_can_pot.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="video-label">Task 2: move can pot</div>
+        </div>
+        <div class="video-wrapper">
+          <div class="video-container">
+            <video autoplay loop muted playsinline>
+              <source src="sources/videos/click_alarmclock.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="video-label">Task 3: click alarmclock</div>
+        </div>
+        <div class="video-wrapper">
+          <div class="video-container">
+            <video autoplay loop muted playsinline>
+              <source src="sources/videos/click_bell.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="video-label">Task 4: click bell</div>
+        </div>
+        <div class="video-wrapper">
+          <div class="video-container">
+            <video autoplay loop muted playsinline>
+              <source src="sources/videos/move_playingcard_away.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="video-label">Task 5: move playingcard away</div>
+        </div>
+        <div class="video-wrapper">
+          <div class="video-container">
+            <video autoplay loop muted playsinline>
+              <source src="sources/videos/open_microwave.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="video-label">Task 6: open microwave</div>
+        </div>
+        <div class="video-wrapper">
+          <div class="video-container">
+            <video autoplay loop muted playsinline>
+              <source src="sources/videos/stack_blocks_two.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="video-label">Task 7: stack blocks two</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row top40 comp-box">
+    <h2 class="text-center" style="margin-top:0;">Dynamic Inference via Horizon Consensus</h2>
+    <div class="col-md-12 text-justify">
+      <p>
+        MoH enables a dynamic inference scheme for stable and fast inference.
+        Specifically, each horizon are treated as a voter and prefix actions that receive consistent support across horizons are identified,
+        forming a self-truncating executable chunk while deferring uncertain actions to the next replanning iteration.
+        Notably, even when the throughput is increased to 2.5× the default setting (5 steps), \(\pi_{0.5}\) with MoH under dynamic inference still outperforms the baseline \(\pi_{0.5}\).
+      </p>
+    </div>
+
+    <div class="row top20 display-flex-center">
+      <div class="col-md-5">
+        <figure class="figure-box">
+          <img src="sources/tables/algorithm_dynamic_inference.jpg" alt="Algorithm" class="img-responsive" style="width: 80%;">
+          <figcaption class="caption-text">
+            Algorithm of dynamic inference via cross-horizon consensus.
+          </figcaption>
+        </figure>
+      </div>
+      <div class="col-md-7">
+        <figure class="figure-box">
+          <img src="sources/images/dynamic.png" alt="Dynamic Inference Overview" class="img-responsive" style="width: 100%;">
+          <figcaption class="caption-text">
+            Our strategy integrates action chunks of multiple horizons via a shared action transformer and a lightweight mixture gating mechanism.
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div class="col-md-12 text-justify top20">
+      <p>
+        We visualize one rollout on LIBERO-Long under dynamic inference.
+        For this trajectory, we display most timesteps together with the action-chunk lengths that are actually executed.
+        A clear pattern emerges: around decision points, such as when the robot changes its movement direction or commits to approaching a new target object, and during fine-grained manipulation (e.g., grasping and lifting the bottle), the policy tends to select only the shortest horizon of 5 steps.
+        In contrast, when the system is in a relatively stable and low-risk phase, such as translating the grasped object or moving the arm through free space toward a pre-grasp configuration, the executed chunks become noticeably longer.
+      </p>
+    </div>
+
+    <div class="col-md-10 col-md-offset-1 top20">
+      <figure class="figure-box">
+        <img src="sources/images/dynamic_inference.png" alt="Dynamic Inference Stats" class="img-responsive">
+        <figcaption class="caption-text">
+          Example of dynamic inference on LIBERO-Long.
+          \(\pi_{0.5}\) with MoH runs dynamic inference with scaling ratio r = 1.1.
+          After each action chunk prediction, only the prefix actions with horizon consensus are executed.
+          Shorter chunks are selected near decision points and fine-grained manipulation, whereas longer chunks are used during smooth, low-risk motions.
+        </figcaption>
+      </figure>
+    </div>
+
+    <div class="col-md-8 col-md-offset-2 top40">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="video-container">
+            <video autoplay loop muted playsinline>
+              <source src="sources/videos/default_chunked_video_web.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="video-label">Default Inference: prefix 5 actions executed</div>
+        </div>
+        <div class="col-md-6">
+          <div class="video-container">
+            <video autoplay loop muted playsinline>
+              <source src="sources/videos/dynamic_actions_video_web.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="video-label text-red-bold">Dynamic Inference: select executable actions via horizon consensus</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row top40">
+    <h2>Latency Comparison</h2>
+    <div class="col-md-12 text-justify">
+      <p>
+        We present the training and inference time cost of \(\pi_{0}\) and \(\pi_{0.5}\) under different horizon settings.
+        Benefiting from data parallelism, MoH brings very little additional time overhead for both training and inference.
+        Importantly, the inference latency is virtually unaffected, which means that MoH does not impact the control frequency and fully preserves the usability of VLA models.
+      </p>
+    </div>
+    <div class="col-md-8 col-md-offset-2 top20">
+      <figure class="figure-box">
+        <img src="sources/images/overhead.png" alt="Training and Inference Efficiency" class="img-responsive">
+        <figcaption class="caption-text">
+          Visualization of the overhead under different horizon settings.
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="row top40">
+    <h2>Effect of Balance Loss</h2>
+    <div class="col-md-12 text-justify">
+      <p>
+        To prevent the collapse of gating head, we introduce a balance loss, please refer to Section 3.2 in paper.<br>
+        We present the horizon weights of \(\pi_{0.5}\) with MoH on LIBERO-Long task suite.
+        Without the balance loss, the gate head tends to assign higher weights to action chunks with longer horizons, because longer horizons participate in more steps during action mixture.
+        This introduces statistical and gradient bias during training and manifests as an imbalance in gating learning.
+        After introducing the balance loss, this bias is effectively suppressed, enabling the gating head to better leverage predictions from each horizon.
+        Meanwhile, because the balance loss acts only as a regularization term, it does not forcibly flatten the weights, thereby avoiding excessive averaging.
+      </p>
+    </div>
+    <div class="col-md-8 col-md-offset-2 top20">
+      <figure class="figure-box">
+        <img src="sources/images/weights.png" alt="Training and Inference Efficiency" class="img-responsive">
+        <figcaption class="caption-text">
+          Visualization of horizon weights of \(\pi_{0.5}\) with MoH on LIBERO-Long task suite.
+          The weights of H3 drop to 0 at steps 4 and 5 as it is no longer active.
+        </figcaption>
+      </figure>
+    </div>
+    <div class="col-md-12 text-justify">
+      <p>
+        For more ablation studies, please refer to Section 4.3 in paper!
+      </p>
+    </div>
+
+  </div>
+
+  <div class="row top40 comp-box">
+    <div class="col-md-12">
+      <h2 class="text-center" style="margin-top:0;">Real-World Experiments</h2>
+    </div>
+    <div class="col-md-12 text-justify">
+      <p>
+        We also conduct real-world experiments on three tasks.
+        These tasks jointly require instruction following, object relocation and rotation, and precise grasping and placement, providing a comprehensive evaluation of VLA models in real-world settings.
+        As shown in Figure 10, across all three tasks and for both base models, the MoH strategy yields consistent performance gains.
+      </p>
+    </div>
+
+    <div class="col-md-10 col-md-offset-1 top20">
+      <figure class="figure-box">
+        <img src="sources/images/realrobot.png" alt="Real World Setup and Results" class="img-responsive">
+        <figcaption class="caption-text">
+          Experimental settings and results in real-world scenarios.
+        </figcaption>
+      </figure>
+    </div>
+
+    <div class="col-md-12 top20">
+      <h3 class="text-center">Qualitative Comparisons</h3>
+
+      <div class="col-md-12">
+        <div class="row">
+
+          <div class="col-md-6 col-sm-12" style="border-right: 1px solid #ddd; padding-right: 15px;">
+            <div class="row">
+              <div class="col-xs-6">
+                <div class="video-container" style="aspect-ratio: auto; height: auto;">
+                  <video autoplay loop muted playsinline style="height: auto; object-fit: contain;">
+                    <source src="sources/videos/real_pi0.mp4" type="video/mp4">
+                  </video>
+                </div>
+                <div class="video-label">Baseline (\(\pi_0\))</div>
+              </div>
+              <div class="col-xs-6">
+                <div class="video-container" style="aspect-ratio: auto; height: auto;">
+                  <video autoplay loop muted playsinline style="height: auto; object-fit: contain;">
+                    <source src="sources/videos/real_pi0_moh.mp4" type="video/mp4">
+                  </video>
+                </div>
+                <div class="video-label text-blue-bold">Ours (\(\pi_0\) + MoH)</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-12" style="padding-left: 15px;">
+            <div class="row">
+              <div class="col-xs-6">
+                <div class="video-container" style="aspect-ratio: auto; height: auto;">
+                  <video autoplay loop muted playsinline style="height: auto; object-fit: contain;">
+                    <source src="sources/videos/real_pi05.mp4" type="video/mp4">
+                  </video>
+                </div>
+                <div class="video-label">Baseline (\(\pi_{0.5}\))</div>
+              </div>
+              <div class="col-xs-6">
+                <div class="video-container" style="aspect-ratio: auto; height: auto;">
+                  <video autoplay loop muted playsinline style="height: auto; object-fit: contain;">
+                    <source src="sources/videos/real_pi05_moh.mp4" type="video/mp4">
+                  </video>
+                </div>
+                <div class="video-label text-blue-bold">Ours (\(\pi_{0.5}\) + MoH)</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row top40 box-gray">
+    <h2 class="text-center" style="margin-top:0;">Citation</h2>
+    <div class="codebox">
+      <button class="copy-btn" aria-label="Copy to clipboard">Copy</button>
+      <pre class="codebox-pre"><code class="nohighlight">@article{jing2025mixture_of_horizons,
+  title={Mixture of Horizons in Action Chunking},
+  author={Jing, Dong and Wang, Gang and Liu, Jiaqi and Tang, Weiliang and Sun, Zelong and Yao, Yunchao and Wei, Zhenyu and Liu, Yunhui and Lu, Zhiwu and Ding, Mingyu},
+  journal={arXiv preprint arXiv:2511.19433},
+  year={2025}
+}</code></pre>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      document.querySelectorAll('.codebox').forEach(function (box) {
+        const btn = box.querySelector('.copy-btn');
+        const codeEl = box.querySelector('pre code');
+        btn.addEventListener('click', async function () {
+          const text = (codeEl.innerText || codeEl.textContent || '').trim();
+          try {
+            await navigator.clipboard.writeText(text);
+            btn.textContent = 'Copied!';
+          } catch (err) {
+            btn.textContent = 'Failed';
+          }
+          setTimeout(() => (btn.textContent = 'Copy'), 1500);
+        });
+      });
+    })();
+  </script>
+
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+</body>
+</html>
